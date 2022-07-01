@@ -5,7 +5,7 @@
   */
 int main(void)
 {
-int integer;
+int _int;
 long int long_int;
 long long int longLong_int;
 float _float;
