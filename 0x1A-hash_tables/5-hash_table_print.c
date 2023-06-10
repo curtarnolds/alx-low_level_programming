@@ -9,25 +9,28 @@ void hash_table_print(const hash_table_t *ht)
 {
 	unsigned long int i;
 	hash_node_t *node;
+	int type_comma;
+
+	type_comma = 0;
+
+	if (ht == NULL)
+		return;
 
 	printf("{");
-	if (ht == NULL)
-		;
-	else
+	for (i = 0; i < ht->size; i++)
 	{
-		for (i = 0; i < ht->size; i++)
+		node = ht->array[i];
+		if (node != NULL)
 		{
-			node = ht->array[i];
-			if (node == NULL)
-				continue;
-
 			while (node)
 			{
 				printf("'%s': '%s'", node->key, node->value);
 				node = node->next;
+				if (node))
+					printf(", ");
 			}
+		type_comma = 1;
 		}
 	}
 	printf("}\n");
-
 }

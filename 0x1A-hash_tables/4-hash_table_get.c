@@ -22,11 +22,19 @@ char *hash_table_get(const hash_table_t *ht, const char *key)
 		return (NULL);
 
 	node = ht->array[index];
-	while (node)
+	if (node)
 	{
 		if (strcmp(node->key, key) == 0)
-			return (ht->array[index]->value);
-		node = node->next;
+			return (node->value);
+		else
+		{
+			while (node->next)
+			{
+				node = node->next;
+				if (strcmp(node->key, key) == 0)
+					return (node->value);
+			}
+		}
 	}
 	return (NULL);
 }
