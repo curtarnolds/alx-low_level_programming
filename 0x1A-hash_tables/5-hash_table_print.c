@@ -11,26 +11,30 @@ void hash_table_print(const hash_table_t *ht)
 	hash_node_t *node;
 	int type_comma;
 
-	type_comma = 0;
 
 	if (ht == NULL)
 		return;
+	type_comma = False;
 
 	printf("{");
+
 	for (i = 0; i < ht->size; i++)
 	{
 		node = ht->array[i];
-		if (node != NULL)
+		if (node == NULL)
+			continue;
+
+		if (type_comma == True)
+			printf(", ");
+
+		while (node)
 		{
-			while (node)
-			{
-				printf("'%s': '%s'", node->key, node->value);
-				node = node->next;
-				if (node))
-					printf(", ");
-			}
-		type_comma = 1;
+			printf("'%s': '%s'", node->key, node->value);
+			node = node->next;
+			if (node)
+				printf(", ");
 		}
+		type_comma = True;
 	}
 	printf("}\n");
 }
