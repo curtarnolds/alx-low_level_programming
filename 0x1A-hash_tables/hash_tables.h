@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdio.h>
 /**
  * struct hash_node_s - Node of a hash table
  *
@@ -38,6 +39,7 @@ unsigned long int key_index(const unsigned char *key, unsigned long int size);
 int hash_table_set(hash_table_t *ht, const char *key, const char *value);
 char *hash_table_get(const hash_table_t *ht, const char *key);
 hash_node_t *create_node(const char *key, const char *value);
+void hash_table_print(const hash_table_t *ht);
 void free_item(hash_node_t *item);
 void free_table(hash_table_t *table);
 void print_table(hash_table_t *table);
