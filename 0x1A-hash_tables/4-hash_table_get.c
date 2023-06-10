@@ -13,8 +13,10 @@ char *hash_table_get(const hash_table_t *ht, const char *key)
 {
 	unsigned long int index;
 
+	if (ht == NULL || key == NULL  || *key == '\0')
+		return (NULL);
+
 	index = key_index((const unsigned char *) key, ht->size);
-	printf("%lu\n", index);
 
 	if (ht->array[index] != NULL)
 	{
