@@ -1,5 +1,4 @@
 #include "hash_tables.h"
-#include <stdio.h>
 
 
 /**
@@ -11,10 +10,10 @@
 */
 char *hash_table_get(const hash_table_t *ht, const char *key)
 {
-	unsigned long int index;
 	hash_node_t *node;
+	unsigned long int index;
 
-	if (ht == NULL || key == NULL  || *key == '\0')
+	if (ht == NULL ||  key == NULL || *key == '\0')
 		return (NULL);
 
 	index = key_index((const unsigned char *) key, ht->size);
@@ -22,21 +21,11 @@ char *hash_table_get(const hash_table_t *ht, const char *key)
 		return (NULL);
 
 	node = ht->array[index];
-	if (node)
+	while (node)
 	{
 		if (strcmp(node->key, key) == 0)
-		{
 			return (node->value);
-		}
-		else
-		{
-			while (node->next)
-			{
-				node = node->next;
-				if (strcmp(node->key, key) == 0)
-					return (node->value);
-			}
-		}
+		node = node->next;
 	}
 	return (NULL);
 }
