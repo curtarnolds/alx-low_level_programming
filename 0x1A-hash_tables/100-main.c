@@ -14,35 +14,30 @@ int main(void)
     shash_table_t *ht;
 
     ht = shash_table_create(1024);
-	printf("Debug: ht created\n");
     shash_table_set(ht, "y", "0");
-	printf("Debug: set 1\n");
     shash_table_print(ht);
-	printf("Debug: print 1\n");
+	printf("char: y \t ascii: %d \t index: %lu\n", "y", key_index((const unsigned char *) "y", ht->size));
     shash_table_set(ht, "j", "1");
-	printf("Debug: set 2\n");
     shash_table_print(ht);
-	printf("Debug: print 2");
+	printf("char: j \t ascii: %d \t index: %lu\n","j", key_index((const unsigned char *) "j", ht->size));
     shash_table_set(ht, "c", "2");
-	printf("Debug");
     shash_table_print(ht);
-	printf("Debug");
+	printf("char: c \t ascii: %d \t index: %lu\n", "c", key_index((const unsigned char *) "c", ht->size));
     shash_table_set(ht, "b", "3");
-	printf("Debug");
     shash_table_print(ht);
-	printf("Debug");
+	printf("char: b \t ascii: %d \t index: %lu\n","b", key_index((const unsigned char *) "b", ht->size));
     shash_table_set(ht, "z", "4");
-	printf("Debug");
     shash_table_print(ht);
-	printf("Debug");
+	printf("char: z \t ascii: %d \t index: %lu\n","z", key_index((const unsigned char *) "z", ht->size));
     shash_table_set(ht, "n", "5");
-	printf("Debug");
     shash_table_print(ht);
-	printf("Debug");
+	printf("char: n \t ascii: %d \t index: %lu\n","n", key_index((const unsigned char *) "n", ht->size));
     shash_table_set(ht, "a", "6");
-	printf("Debug");
     shash_table_print(ht);
-	printf("Debug");
+	printf("char: a \t ascii: %d \t index: %lu\n","a", key_index((const unsigned char *) "a", ht->size));
+    shash_table_set(ht, "m", "7");
+    shash_table_print(ht);
+	printf("char: m \t ascii: %d \t index: %lu\n","m", key_index((const unsigned char *) "m", ht->size));
 
 
     return (EXIT_SUCCESS);

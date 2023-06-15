@@ -97,30 +97,38 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 
 	if (ht->shead)
 	{
-		snode = ht->shead;
-		while (snode)
+		if (strcmp(new_node->key, ht->shead->key) < 0)
 		{
-			if (strcmp(new_node->key, snode->key) <= 0)
+			ht->shead->sprev = new_node;
+			new_node->snext = ht->shead;
+			new_node->sprev =  NULL;
+			ht->shead = new_node;
+		}
+		else
+		{
+			snode = ht->shead;
+			while (snode)
 			{
-				snode->sprev = new_node;
-				new_node->snext = snode;
-				new_node->sprev =  snode->sprev;
-				snode = new_node;
-				break;
+				if (strcmp(new_node->key, snode->key) < 0)
+				{
+					snode->sprev = new_node;
+					new_node->snext = snode;
+					new_node->sprev =  snode->sprev;
+					snode->sprev->snext = new_node;
+
+					break;
+				}
+				stmp = snode;
+				snode = snode->snext;
 			}
-			stmp = snode;
-			snode = snode->snext;
+			if (snode == NULL)
+			{
+				new_node->snext = NULL;
+				new_node->sprev =  stmp;
+				stmp->snext = new_node;
+				ht->stail = new_node;
+			}
 		}
-
-		if (snode == NULL)
-		{
-			new_node->snext = NULL;
-			new_node->sprev =  stmp;
-			stmp->snext = new_node;
-			ht->stail = new_node;
-		}
-
-
 	}
 	else
 	{
@@ -178,7 +186,7 @@ void shash_table_print(const shash_table_t *ht)
 	node = ht->shead;
 	while (node)
 	{
-		printf("  '%s': '%s'", node->key, node->value);
+		printf("'%s': '%s'", node->key, node->value);
 		if (node->snext)
 			printf(", ");
 		node = node->snext;
