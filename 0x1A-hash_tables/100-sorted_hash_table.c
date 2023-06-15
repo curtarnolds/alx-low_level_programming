@@ -12,9 +12,9 @@ shash_table_t *shash_table_create(unsigned long int size)
 	shash_table_t *new_table;
 
 	new_table = (shash_table_t *) malloc(sizeof(shash_table_t));
-	new_table->size = size;
 	if (new_table == NULL)
 		return (NULL);
+	new_table->size = size;
 	new_table->array = calloc(new_table->size, sizeof(shash_node_t *));
 	if (new_table->array == NULL)
 	{
@@ -39,7 +39,7 @@ shash_table_t *shash_table_create(unsigned long int size)
 int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 {
 	char *value_copy, *key_copy;
-	shash_node_t *node, *new_node, *snode, *stmp;
+	shash_node_t *node, *new_node;
 	unsigned long int index;
 
 	if (ht == NULL || key == NULL || value == NULL || *key == '\0')
@@ -48,19 +48,16 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 	value_copy = strdup(value);
 	if (value_copy == NULL)
 		return (0);
-	if (ht->array[index])
+	node = ht->array[index];
+	while (node)
 	{
-		node = ht->array[index];
-		while (node)
+		if (strcmp(key, node->key) == 0)
 		{
-			if (strcmp(key, node->key) == 0)
-			{
-				free(node->value);
-				node->value = value_copy;
-				return (1);
-			}
-			node = node->next;
+			free(node->value);
+			node->value = value_copy;
+			return (1);
 		}
+		node = node->next;
 	}
 	key_copy = strdup(key);
 	if (key_copy == NULL)
@@ -79,52 +76,7 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 	new_node->value = value_copy;
 	new_node->next = ht->array[index];
 	ht->array[index] = new_node;
-	if (ht->shead)
-	{
-		if (strcmp(new_node->key, ht->shead->key) < 0)
-		{
-			(ht->shead)->sprev = new_node;
-			new_node->snext = ht->shead;
-			new_node->sprev =  NULL;
-			ht->shead = new_node;
-		}
-		else
-		{
-			snode = ht->shead;
-			while (snode)
-			{
-				if (strcmp(new_node->key, snode->key) < 0)
-				{
-					new_node->sprev = snode->sprev;
-					new_node->snext = snode;
-					if (snode->sprev)
-						snode->sprev->snext = new_node;
-					else
-						ht->shead = new_node;
-					snode->sprev = new_node;
-					break;
-				}
-				stmp = snode;
-				snode = snode->snext;
-			}
-
-
-			if (snode == NULL)
-			{
-				new_node->snext = NULL;
-				new_node->sprev =  stmp;
-				stmp->snext = new_node;
-				ht->stail = new_node;
-			}
-		}
-	}
-	else
-	{
-		new_node->snext = NULL;
-		new_node->sprev = NULL;
-		ht->shead = new_node;
-		ht->stail = new_node;
-	}
+	shash_table_update_snode(ht, new_node);
 	return (1);
 }
 
@@ -236,4 +188,52 @@ void shash_table_delete(shash_table_t *ht)
 	}
 	free(ht->array);
 	free(ht);
+}
+
+
+/**
+ * shash_table_update_snode - Update sorted linked list of hash table
+ * @ht: The hash table
+ * @new_node: The node to insert into the linked list
+*/
+void shash_table_update_snode(shash_table_t *ht, shash_node_t *new_node)
+{
+	shash_node_t *snode, *stmp;
+
+	if (ht->shead)
+	{
+		snode = ht->shead;
+		while (snode)
+		{
+			if (strcmp(new_node->key, snode->key) < 0)
+			{
+				new_node->sprev = snode->sprev;
+				new_node->snext = snode;
+				if (snode->sprev)
+					snode->sprev->snext = new_node;
+				else
+					ht->shead = new_node;
+				snode->sprev = new_node;
+				break;
+			}
+			stmp = snode;
+			snode = snode->snext;
+		}
+
+		if (snode == NULL)
+		{
+			new_node->snext = NULL;
+			new_node->sprev =  stmp;
+			stmp->snext = new_node;
+			ht->stail = new_node;
+		}
+	}
+	else
+	{
+		new_node->snext = NULL;
+		new_node->sprev = NULL;
+		ht->shead = new_node;
+		ht->stail = new_node;
+	}
+
 }
