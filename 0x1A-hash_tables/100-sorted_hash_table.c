@@ -33,7 +33,6 @@ shash_table_t *shash_table_create(unsigned long int size)
  * @key: The key. (cannot be an empty string)
  * @value: The value associated with the key.
  * Return: 1 on success. 0 otherwise
- *
  * In case of collision, a new node is added at the beginning of the list
 */
 int shash_table_set(shash_table_t *ht, const char *key, const char *value)
